@@ -1,12 +1,24 @@
 itemGroup.TakoTech=TakoTech
 
 item.takotech.ore_storage_cell.name=ME Ore Storage Cell
+item.takotech.raw_ore_storage_cell.name=ME Raw Ore Storage Cell
+item.takotech.crushed_ore_storage_cell.name=ME Crushed Ore Storage Cell
+item.takotech.dust_storage_cell.name=ME Dust Storage Cell
 item.takotech.toolbox_plus.name=Tool Box Plus
 
 tile.takotech.web_controller.name=Web Controller
 
-tooltip.takotech.ore_storage_cell.desc=An almost infinite capacity storage component, only usable for mineral storage.
-tooltip.takotech.ore_storage_cell.desc.1=Can store ore dictionary prefixes.
+tooltip.takotech.ore_storage_cell.desc=An almost infinite capacity storage component, only usable for ore storage.
+tooltip.takotech.ore_storage_cell.desc.1=Can store items with ore dictionary prefix: ore
+
+tooltip.takotech.raw_ore_storage_cell.desc=An almost infinite capacity storage component, only usable for raw ore storage.
+tooltip.takotech.raw_ore_storage_cell.desc.1=Can store items with ore dictionary prefix: rawOre
+
+tooltip.takotech.crushed_ore_storage_cell.desc=An almost infinite capacity storage component, only usable for crushed ore storage.
+tooltip.takotech.crushed_ore_storage_cell.desc.1=Can store items with ore dictionary prefix: crushed
+
+tooltip.takotech.dust_storage_cell.desc=An almost infinite capacity storage component, only usable for dust storage.
+tooltip.takotech.dust_storage_cell.desc.1=Can store items with ore dictionary prefix: dustImpure, dustPure
 
 tooltip.takotech.web_controller.desc=Unfinished, do not use. It may cause archive corruption.
 tooltip.takotech.web_controller.desc.1=Controller Id

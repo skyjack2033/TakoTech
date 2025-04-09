@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.IncludeExclude;
-import appeng.api.config.Upgrades;
 import appeng.api.exceptions.AppEngException;
 import appeng.api.implementations.items.IItemGroup;
 import appeng.api.implementations.items.IStorageCell;
@@ -31,7 +30,6 @@ import appeng.util.item.OreReference;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import moe.takochan.takotech.client.tabs.TakoTechTabs;
 import moe.takochan.takotech.common.item.BaseAECellItem;
 import moe.takochan.takotech.common.storage.ITakoCellInventory;
 import moe.takochan.takotech.common.storage.ITakoCellInventoryHandler;
@@ -41,26 +39,26 @@ import moe.takochan.takotech.utils.CommonUtils;
 import moe.takochan.takotech.utils.I18nUtils;
 
 /**
- * 矿石存储元件
+ * 粗矿存储元件
  * <p>
- * 只接受带有"ore"矿典前缀的物品（矿石）
+ * 只接受带有"rawOre"矿典前缀的物品（粗矿）
  */
-public class ItemOreStorageCell extends BaseAECellItem implements IStorageCell, IItemGroup {
+public class ItemRawOreStorageCell extends BaseAECellItem implements IStorageCell, IItemGroup {
 
-    private static final String[] ORE_PREFIXES = { "ore" };
+    private static final String[] ORE_PREFIXES = { "rawOre" };
     private static String oreDefs;
 
     private final int perType = 1;
     private final double idleDrain;
 
     @SuppressWarnings("Guava")
-    public ItemOreStorageCell() {
-        super(NameConstants.ITEM_ORE_STORAGE_CELL);
+    public ItemRawOreStorageCell() {
+        super(NameConstants.ITEM_RAW_ORE_STORAGE_CELL);
 
         idleDrain = 1.14;
 
         this.setMaxStackSize(1);
-        this.setTextureName(CommonUtils.resource(NameConstants.ITEM_ORE_STORAGE_CELL));
+        this.setTextureName(CommonUtils.resource(NameConstants.ITEM_RAW_ORE_STORAGE_CELL));
         this.setFeature(EnumSet.of(AEFeature.StorageCells));
     }
 
@@ -88,8 +86,8 @@ public class ItemOreStorageCell extends BaseAECellItem implements IStorageCell, 
     @Override
     public void addCheckedInformation(final ItemStack itemStack, final EntityPlayer player, final List<String> lines,
         final boolean displayMoreInfo) {
-        lines.add(I18nUtils.tooltip(NameConstants.ITEM_ORE_STORAGE_CELL_DESC)); // 添加物品的描述
-        lines.add("§a仅存储矿石 (ore)"); // 添加专用描述
+        lines.add(I18nUtils.tooltip(NameConstants.ITEM_RAW_ORE_STORAGE_CELL_DESC)); // 添加物品的描述
+        lines.add("§a仅存储粗矿 (rawOre)"); // 添加专用描述
 
         // 获取物品堆栈关联的存储单元库存处理器
         final IMEInventoryHandler<?> inventory = AEApi.instance()
@@ -143,7 +141,6 @@ public class ItemOreStorageCell extends BaseAECellItem implements IStorageCell, 
                                     .getStackInSlot(i);
                                 if (s != null) {
                                     lines.add(s.getDisplayName()); // 显示物品名称
-
                                 }
                             }
                         }
@@ -155,7 +152,7 @@ public class ItemOreStorageCell extends BaseAECellItem implements IStorageCell, 
 
                 String defs = getOreDefs();
                 if (defs != null && !defs.isEmpty()) {
-                    lines.add(I18nUtils.tooltip(NameConstants.ITEM_ORE_STORAGE_CELL_DESC_1) + ": ");
+                    lines.add(I18nUtils.tooltip(NameConstants.ITEM_RAW_ORE_STORAGE_CELL_DESC) + ".1: ");
                     lines.add(defs);
                 }
             }
@@ -209,121 +206,121 @@ public class ItemOreStorageCell extends BaseAECellItem implements IStorageCell, 
     }
 
     /**
-     * 获取该存储单元支持的物品类型总数。
+     * 获取该存储单元可以存储的物品类型数量。
      *
      * @param cellItem 存储单元物品
-     * @return 支持无限多的物品类型
+     * @return 可存储的物品类型数量
      */
     @Override
     public int getTotalTypes(ItemStack cellItem) {
-        // 应该没这么多矿物类型吧（恶臭）
-        return 114514;
+        return 63;
     }
 
     /**
-     * 判断某个物品是否被黑名单所包含。
+     * 判断物品是否可以被存储在该存储单元中
      *
      * @param cellItem          存储单元物品
-     * @param requestedAddition 要添加的物品
-     * @return 如果物品在黑名单中，返回 true，否则返回 false
+     * @param requestedAddition 请求添加的物品堆栈
+     * @return 如果可以存储则返回 false，否则返回 true
      */
     @Override
     public boolean isBlackListed(ItemStack cellItem, IAEItemStack requestedAddition) {
-        // 检查请求添加的物品是否有矿石辞典
         if (requestedAddition != null) {
             ItemStack stack = requestedAddition.getItemStack();
             OreReference oreRef = OreHelper.INSTANCE.isOre(stack);
             if (oreRef != null) {
-                // 获取所有与该物品关联的矿石辞典名称
                 Collection<String> oreIds = oreRef.getEquivalents();
-                // 检查是否包含所需的矿石类型前缀
                 for (String oreId : oreIds) {
                     for (String prefix : ORE_PREFIXES) {
                         if (oreId.startsWith(prefix)) {
-                            return false; // 包含指定前缀，允许存储
+                            return false;
                         }
                     }
                 }
             }
-            return true; // 没有符合条件的矿石辞典，不允许存储
+            return true;
         }
-        return true; // 没有请求添加的物品，默认不允许存储
-    }
-
-    /**
-     * 允许指定此存储单元是否可以存储在其他存储单元中，仅针对像物质炮这样不是通用存储的特殊物品设置。。
-     *
-     * @return 如果该存储单元可以存储在其他存储单元中，则返回 true，通常情况下返回 false，除非在特定情况下，例如物质炮。
-     */
-    @Override
-    public boolean storableInStorageCell() {
-        return false;
-    }
-
-    /**
-     * 判断该物品是否为存储单元。
-     *
-     * @param i 物品堆栈
-     * @return 不作为默认存储单元
-     */
-    @Override
-    public boolean isStorageCell(ItemStack i) {
-        // 这里恒定为false，使AE再注册元件时不会将该物品注册为标准存储元件，以便于让自定义的CellInventory接管
-        return false;
-    }
-
-    /**
-     * 旧版空闲消耗 API。在基础 AE2 中未使用。
-     *
-     * @return 该存储单元将使用的 AE/t 消耗量。
-     */
-    @Override
-    public double getIdleDrain() {
-        return this.idleDrain;
-    }
-
-    /**
-     * 如果返回 false，物品将不会被视为存储单元，且不能插入工作台。
-     *
-     * @param is 物品
-     * @return 元件是否可插入元件工作台并编辑
-     */
-    @Override
-    public boolean isEditable(ItemStack is) {
         return true;
     }
 
     /**
-     * 获取存储单元的升级槽
+     * 此物品是否可存储在存储单元中。
+     *
+     * @return 始终返回 false，因为这个物品本身是存储单元
+     */
+    @Override
+    public boolean storableInStorageCell() {
+        return false; // 不允许将存储单元存储在其他存储单元中
+    }
+
+    /**
+     * 判断给定的物品堆栈是否是存储单元。
+     *
+     * @param i 物品堆栈
+     * @return 如果是存储单元则返回 true，否则返回 false
+     */
+    @Override
+    public boolean isStorageCell(ItemStack i) {
+        return true; // 这个物品是存储单元
+    }
+
+    /**
+     * 获取存储单元的闲置能量消耗。
+     *
+     * @return 闲置能量消耗值
+     */
+    @Override
+    public double getIdleDrain() {
+        return this.idleDrain; // 返回默认的闲置能量消耗
+    }
+
+    /**
+     * 判断该物品是否可编辑。
      *
      * @param is 物品堆栈
-     * @return 返回存储单元的升级槽，若没有则返回 null
+     * @return 如果可编辑则返回 true，否则返回 false
+     */
+    @Override
+    public boolean isEditable(ItemStack is) {
+        return true; // 物品可以通过单元工作台进行编辑
+    }
+
+    /**
+     * 获取升级物品栏。
+     *
+     * @param is 物品堆栈
+     * @return 升级物品栏实例
      */
     @Override
     public IInventory getUpgradesInventory(ItemStack is) {
-        return new CellUpgrades(is, 2);
+        return new CellUpgrades(is, 0); // 返回升级物品栏实例，但不支持升级（槽位为0）
     }
 
     /**
-     * 用于提取或将工作台的内容镜像到存储单元中。
+     * 获取配置物品栏。
      *
      * @param is 物品堆栈
-     * @return 返回存储单元的配置槽，若没有则返回 null
+     * @return 配置物品栏实例
      */
     @Override
     public IInventory getConfigInventory(ItemStack is) {
-        return new CellConfig(is);
+        return new CellConfig(is); // 返回配置物品栏实例
     }
 
     /**
-     * 获取该物品的模糊模式设置（如果有）。
+     * 获取物品的模糊模式。
      *
      * @param is 物品堆栈
-     * @return 返回该物品的模糊模式设置，若没有则返回 null
+     * @return 物品的模糊模式
      */
     @Override
     public FuzzyMode getFuzzyMode(ItemStack is) {
-        return FuzzyMode.fromItemStack(is);
+        final String fz = CommonUtils.openNbtData(is)
+            .getString("FuzzyMode");
+        if (fz != null && !fz.isEmpty()) {
+            return FuzzyMode.valueOf(fz);
+        }
+        return FuzzyMode.IGNORE_ALL; // 默认模糊模式
     }
 
     /**
@@ -339,10 +336,10 @@ public class ItemOreStorageCell extends BaseAECellItem implements IStorageCell, 
     }
 
     /**
-     * 获取矿典过滤器, 需要矿典卡
+     * 获取矿物字典过滤器
      *
-     * @param is 存储单元物品
-     * @return 当前的矿物字典过滤器
+     * @param is 物品堆栈
+     * @return 矿典过滤器字符串
      */
     @Override
     public String getOreFilter(ItemStack is) {
@@ -368,28 +365,23 @@ public class ItemOreStorageCell extends BaseAECellItem implements IStorageCell, 
      * @param o         物品堆栈
      * @param container 存储提供者，用于保存和管理数据
      * @return 库存管理实例
-     * @throws AppEngException 如果无法获取库存或发生错误时抛出该异常
+     * @throws AppEngException 初始化失败时抛出异常
      */
     @Override
     public OreStorageCellInventory getCellInv(ItemStack o, ISaveProvider container) throws AppEngException {
         return new OreStorageCellInventory(o, container);
     }
 
-    /**
-     * 注册物品
-     */
     @Override
     public void register() {
-        GameRegistry.registerItem(this, NameConstants.ITEM_ORE_STORAGE_CELL);
-        setCreativeTab(TakoTechTabs.getInstance());
-
-        ItemStack itemStack = new ItemStack(this);
-        // 反向卡
-        Upgrades.INVERTER.registerItem(itemStack, 1);
-        // 矿典卡
-        Upgrades.ORE_FILTER.registerItem(itemStack, 1);
+        GameRegistry.registerItem(this, NameConstants.ITEM_RAW_ORE_STORAGE_CELL);
     }
 
+    /**
+     * 获取矿石定义
+     *
+     * @return 矿石定义字符串
+     */
     private String getOreDefs() {
         if (oreDefs == null) {
             oreDefs = String.join(", ", ORE_PREFIXES);

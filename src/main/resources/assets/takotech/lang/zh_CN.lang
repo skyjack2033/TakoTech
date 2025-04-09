@@ -1,12 +1,24 @@
 itemGroup.TakoTech=塔可科技
 
-item.takotech.ore_storage_cell.name=ME矿物存储原件
+item.takotech.ore_storage_cell.name=ME矿石存储元件
+item.takotech.raw_ore_storage_cell.name=ME粗矿存储元件
+item.takotech.crushed_ore_storage_cell.name=ME粉碎矿物存储元件
+item.takotech.dust_storage_cell.name=ME粉末存储元件
 item.takotech.toolbox_plus.name=高级工具箱
 
 tile.takotech.web_controller.name=Web控制器
 
-tooltip.takotech.ore_storage_cell.desc=一个近乎无限容量的存储元件，只能用于矿物存储
-tooltip.takotech.ore_storage_cell.desc.1=可存入矿典前缀
+tooltip.takotech.ore_storage_cell.desc=一个近乎无限容量的存储元件，只能用于矿石存储
+tooltip.takotech.ore_storage_cell.desc.1=可存入带有矿典前缀的物品: ore
+
+tooltip.takotech.raw_ore_storage_cell.desc=一个近乎无限容量的存储元件，只能用于粗矿存储
+tooltip.takotech.raw_ore_storage_cell.desc.1=可存入带有矿典前缀的物品: rawOre
+
+tooltip.takotech.crushed_ore_storage_cell.desc=一个近乎无限容量的存储元件，只能用于粉碎矿物存储
+tooltip.takotech.crushed_ore_storage_cell.desc.1=可存入带有矿典前缀的物品: crushed
+
+tooltip.takotech.dust_storage_cell.desc=一个近乎无限容量的存储元件，只能用于粉末存储
+tooltip.takotech.dust_storage_cell.desc.1=可存入带有矿典前缀的物品: dustImpure, dustPure
 
 tooltip.takotech.web_controller.desc=未完成，请勿使用，可能会导致存档损坏
 tooltip.takotech.web_controller.desc.1=控制器Id
