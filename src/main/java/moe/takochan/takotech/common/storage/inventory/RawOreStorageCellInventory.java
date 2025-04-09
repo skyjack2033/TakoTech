@@ -21,16 +21,16 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.IterationCounter;
 import moe.takochan.takotech.common.data.CellItemStorageData;
-import moe.takochan.takotech.common.item.ae.ItemOreStorageCell;
+import moe.takochan.takotech.common.item.ae.ItemRawOreStorageCell;
 import moe.takochan.takotech.common.storage.CellItemSavedData;
 import moe.takochan.takotech.common.storage.ITakoCellInventory;
 import moe.takochan.takotech.constants.NBTConstants;
 import moe.takochan.takotech.utils.CommonUtils;
 
 /**
- * 矿物存储元件库存管理。
+ * 粗矿石存储元件库存管理。
  */
-public class OreStorageCellInventory implements ITakoCellInventory {
+public class RawOreStorageCellInventory implements ITakoCellInventory {
 
     // NBT标签名称，用于存储物品类型和数量的标签
     private static final String ITEM_TYPE_TAG = "it";
@@ -45,7 +45,7 @@ public class OreStorageCellInventory implements ITakoCellInventory {
     private final NBTTagCompound tagCompound;
 
     // 原件类型实例
-    private final ItemOreStorageCell cellType;
+    private final ItemRawOreStorageCell cellType;
     private int storedItemTypes;
     // 元件中的物品列表
     private IItemList<IAEItemStack> cellItems;
@@ -57,7 +57,7 @@ public class OreStorageCellInventory implements ITakoCellInventory {
      * @param container 元件的保存提供器
      * @throws AppEngException 如果物品堆栈不是有效的元件，抛出异常
      */
-    public OreStorageCellInventory(ItemStack cellItem, ISaveProvider container) throws AppEngException {
+    public RawOreStorageCellInventory(ItemStack cellItem, ISaveProvider container) throws AppEngException {
         if (cellItem == null) {
             throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
@@ -74,7 +74,7 @@ public class OreStorageCellInventory implements ITakoCellInventory {
         this.storedItemCount = tagCompound.getLong(ITEM_COUNT_TAG);
 
         // 获取元件实例
-        this.cellType = (ItemOreStorageCell) this.cellItem.getItem();
+        this.cellType = (ItemRawOreStorageCell) this.cellItem.getItem();
 
         // 获取元件的数据存储实例
         this.storageData = CommonUtils.isServer() ? CellItemSavedData.getInstance()
@@ -259,9 +259,7 @@ public class OreStorageCellInventory implements ITakoCellInventory {
     }
 
     /**
-     * 获取指定物品类型的剩余可存储数量。
-     **** 
-     * *
+     * 获取指定物品类型的剩余可存储数量。 由于是无限存储，所以恒定返回最大值。
      *
      * @param itemStack 要检查的物品堆栈
      * @return 返回该物品类型的剩余可存储数量
@@ -306,15 +304,6 @@ public class OreStorageCellInventory implements ITakoCellInventory {
     @Override
     public String getOreFilter() {
         return this.cellType.getOreFilter(this.cellItem);
-    }
-
-    /**
-     * 设置该元件的矿石过滤器。
-     *
-     * @param filter 要设置的矿石过滤器字符串
-     */
-    public void setOreFilter(String filter) {
-        this.cellType.setOreFilter(this.cellItem, filter);
     }
 
     /**
@@ -549,7 +538,6 @@ public class OreStorageCellInventory implements ITakoCellInventory {
         }
         CellItemSavedData.getInstance()
             .markDirty();
-
     }
 
     /**

@@ -33,7 +33,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import moe.takochan.takotech.common.item.BaseAECellItem;
 import moe.takochan.takotech.common.storage.ITakoCellInventory;
 import moe.takochan.takotech.common.storage.ITakoCellInventoryHandler;
-import moe.takochan.takotech.common.storage.inventory.OreStorageCellInventory;
+import moe.takochan.takotech.common.storage.inventory.RawOreStorageCellInventory;
 import moe.takochan.takotech.constants.NameConstants;
 import moe.takochan.takotech.utils.CommonUtils;
 import moe.takochan.takotech.utils.I18nUtils;
@@ -368,8 +368,8 @@ public class ItemRawOreStorageCell extends BaseAECellItem implements IStorageCel
      * @throws AppEngException 初始化失败时抛出异常
      */
     @Override
-    public OreStorageCellInventory getCellInv(ItemStack o, ISaveProvider container) throws AppEngException {
-        return new OreStorageCellInventory(o, container);
+    public RawOreStorageCellInventory getCellInv(ItemStack o, ISaveProvider container) throws AppEngException {
+        return new RawOreStorageCellInventory(o, container);
     }
 
     @Override
